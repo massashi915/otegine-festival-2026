@@ -448,6 +448,7 @@
         overflow: hidden;
         page-break-after: avoid;
         break-after: avoid;
+        transform: none !important; /* スマホscaleを印刷に混入させない */
       }
 
       /* 外枠：高さは JS が自動調整するので auto に */
@@ -782,40 +783,6 @@
     window.addEventListener('load', fitScreen);
     window.addEventListener('resize', fitScreen);
 
-    /* ── 印刷：コンテンツ実高さを測ってズーム調整 ── */
-    window.addEventListener('beforeprint', function () {
-      var page   = document.querySelector('.page');
-      var border = document.querySelector('.outer-border');
-
-      // ① print CSS が適用された状態での page の高さ（= 297mm 相当の px）を取得
-      var pagePx   = page.offsetHeight;          // ≈ 297mm in CSS px
-      var padPx    = 7 * pagePx / 297;           // 7mm 分
-      var availPx  = pagePx - 2 * padPx;         // 使えるのは 283mm 分
-
-      // ② 高さ制限を外して outer-border の実際の高さを測る
-      page.style.height   = 'auto';
-      page.style.overflow = 'visible';
-      border.style.zoom   = '';                  // リセット後に測る
-
-      var borderH = border.scrollHeight;
-
-      // ③ はみ出す場合だけズームを掛ける
-      if (borderH > availPx) {
-        border.style.zoom = String(availPx / borderH);
-      }
-
-      // ④ ページ高さを戻す（overflow hidden で余白を隠す）
-      page.style.height   = '297mm';
-      page.style.overflow = 'hidden';
-    });
-
-    window.addEventListener('afterprint', function () {
-      var page   = document.querySelector('.page');
-      var border = document.querySelector('.outer-border');
-      border.style.zoom   = '';
-      page.style.height   = '';
-      page.style.overflow = '';
-    });
   })();
 </script>
 </body>
