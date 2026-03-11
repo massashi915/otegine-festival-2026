@@ -451,11 +451,12 @@
         transform: none !important; /* スマホscaleを印刷に混入させない */
       }
 
-      /* 外枠：高さは JS が自動調整するので auto に */
+      /* 外枠：コンテンツを縮小してA4に収める */
       .outer-border {
         padding: 5mm 6mm;
         min-height: auto;
         height: auto;
+        zoom: 0.82; /* 357mm × 0.82 ≈ 293mm → 283mm以内に収まる */
       }
 
       /* ヘッダー：コンパクトに */
